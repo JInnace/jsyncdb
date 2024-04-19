@@ -1,11 +1,5 @@
 "use strict";
 
-// makestache template info 
-// the following string tells my make scripts its fine to overwtite this the library would have had a template str in the middle of the str
-// BUILT_FILE_OVERWRITE_ALLOWED
-//  ... C:\ws\repos\jitsi_main\jsync\jsyncdb\js_client\jsync_lib.js
-// /* */ 
-
 (function (){
 var isProxy,tlu,msto_z
 var pf,msto_prx
@@ -389,7 +383,16 @@ window.glob_u.ws.fns.onclose = function onclose(event){
 	clog("WS_CLOSE",{that:this,readyState:this.readyState,args:[...arguments]})
 	// glob_u.ws.sockets.ws1.params.ord.run_cbs("WS_CLOSE:",{event,that:this})
 	glob_u.ws.sockets[this.params.socket_name].params.ord.run_cbs("WS_CLOSE:",{event,that:this})
-	setTimeout(this.params.fns.reconnect,1000)
+	let  timeout0 = this.params.timeout0 || 100
+	let timeout_multi = this.params.timeout_multi || 3000
+	let t =timeout_multi
+	// let now = Date.now()
+	if (this.params.HAS_OPENED && timeout_multi<Date.now()-this.params.OPEN_TIME){
+		t=timeout0
+	}
+	// clog(":TIME:",now,this.params.OPEN_TIME,now-this.params.OPEN_TIME)
+	this.params.HAS_OPENED = 0
+	setTimeout(this.params.fns.reconnect,t)
 }
 
 window.glob_u.ws.fns.onmessage = function onmessage(event){
@@ -406,8 +409,10 @@ window.glob_u.ws.fns.onerror = function onerror(event){
 
 }
 window.glob_u.ws.fns.onopen = function onopen(event){
+	this.params.HAS_OPENED = 1
+	this.params.OPEN_TIME = Date.now()
 
-	// clog("WS_OPEN???",{that:this,args:[...arguments]},{on_open_once:this.on_open_once,on_open_cbs:this.params.on_open_cbs})
+	clog("WS_OPEN???",{that:this,args:[...arguments]},{on_open_once:this.on_open_once,on_open_cbs:this.params.on_open_cbs})
 	// glob_u.ws.sockets.ws1.params.ord.run_cbs("WS_OPEN:",{event,that:this})
 	glob_u.ws.sockets[this.params.socket_name].params.ord.run_cbs("WS_OPEN:",{event,that:this})
 	return
@@ -468,6 +473,19 @@ window.glob_u.ws.fns.ws_fns_factory = function ws_fns_factory(socket_opts){
 	return fns
 }
 
+Object.defineProperty(window,'a',{
+    get: function(){
+        console.log('windowProperty is being get...',arguments);
+        glob_u.ws.sockets.ws1.send(`{"a":2.01}`)
+        return 'windowProperty'
+    },
+
+    set: function(val){
+        console.log('windowProperty is being set',arguments);
+    },
+
+    configurable: true,
+});
 
 function connect_ws(o= {}){
 	// clog("connect_ws:",o,jc(o))
@@ -483,7 +501,19 @@ function connect_ws(o= {}){
 		return
 
 	}
-
+	var old_url = o.url
+	// location.protocol == "https:" ? clog("HTTPS") : clog("HTTP?")
+	// let vx1
+	// let vx1;location.protocol == "https:" ?  vx1 = "HTTPS" : vx1 = "HTTP?"
+	// clog("VAR DECS",vx1)
+	// o.url = "ws://127.0.0.1:5000/djc_srv/ws/chat/"
+	// o.url = "ws://127.0.0.1:5000/djc_srv/ws/chat"
+	// o.url = "ws://127.0.0.1:5000/echo_c1"
+	// o.url = `ws://${location.hostname}:5000/echo_c1?HELLO__________________________________________________________________________=1`
+	// o.url = `ws://${location.hostname}:5000/echo_c1${location.search}`
+	// o.url = `ws://${location.hostname}:5000/echo_c1?HELLO+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=1`
+	clog("new WebSocket(o.url)",o,o.url,old_url)
+	// var socket = new WebSocket(o.url,["PROTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"])
 	var socket = new WebSocket(o.url)
 	socket.on_open_once = []
 	socket.pre_init_msgs = []
@@ -533,6 +563,11 @@ function create_ws_ord(){
 window.glob_u.ws.fns.dispatch = function dispatch(o,obj_x,info){
 	var event = o.event
 	// socket = o.that
+	if (event.data == "::CLOSE::"){
+		clog("comand_CLOSE!!!")
+		o.that.close()
+	}
+	// clog(":event.data:",event.data,[this,o,obj_x,info])
 	var data = JSON.parse(event.data)
 	// clog("WS_dispatch",data,socket.params.ord,data["CLIENT_KEY"])
 	// clog("trc:sto:ws_rec",data.CLIENT_KEY,data.sto_event_type,data)
@@ -575,6 +610,34 @@ function ws_reload(){
 
 
 function get_room_name(){
+	// return 
+	var s=location.search
+	// if s[0]=="?"){}
+	s[0]=="?" ?  s = s.slice(1):0
+	var param
+	for (param of s.split("&")){
+
+		let kv = param.split("=")
+		if (kv[0]=="room"){
+			return kv[1]
+		}
+		clog("::",param,kv)
+		// clog("::",param,kv,"")
+	}
+
+	// var 
+	return "room_name"
+	var room_name=location.pathname.match(/\/loc.([^\/]*)\//)
+	if (room_name){
+		room_name = room_name[1]
+	} else {
+	room_name = location.pathname.split("/").pop()
+
+	}
+	return room_name
+
+}
+function get_room_name_old(){
 
 	var room_name=location.pathname.match(/\/loc.([^\/]*)\//)
 	if (room_name){
@@ -691,14 +754,22 @@ function mhndlr_rld_2(_o,scope,info){
 				if (glob_u.prom.init_db_resolve.resolved_inited == 2){
 
 				tmsgx4({sto_event_type:"db_sync_response",payload:jc(pf.root),request_from:parsed.from,request_rn_from:parsed.request_rn,"CLIENT_KEY":"ws_sto"})
+				clog("SENDING!@#$%^&*(")
 				}
 
 			break;
 			case "db_sync_response":
 
+			// clog("PROC db_sync_response",parsed,_o)
+
 					if (glob_u.prom.init_db_resolve && parsed.request_rn_from  == glob_u.prom.init_db_resolve.rn){
+			// clog("::PROC db_sync_response::",parsed,_o)
 						glob_u.prom.init_db_resolve({aaa:"dsr",pl:parsed.payload})
+					} else {
+			// clog("NO PROC::PROC db_sync_response::",parsed,_o)
+
 					}
+			clog("::PROC db_sync_response::",glob_u.prom.init_db_resolve.rn==parsed.request_rn_from,glob_u.prom.init_db_resolve.rn,parsed.request_rn_from,parsed,_o)
 				// clog("db_sync_response",parsed)
 			break;
 
@@ -1295,6 +1366,7 @@ function handle_pre_init_msgs(){
 }
 
 function ws_sto_connected(a,b){
+	// clog("")
 
 	glob_u.cb.ws.run_cbs("WS_MSTO_INITED")
 
@@ -1545,17 +1617,24 @@ ensure_jsync_id_is_set(sessionStorage,"jsync_session")
 
 // TODO:Fix bug caused by a user disconnecting before the connection is properly established
 function connection_info_handler(o,scope,info){
+	// clog("**************************************************************8:",o,scope,info)
 	if (o.data.sto_event_type=="connection_info"){
-	// clog("connection_info_handler:",o,scope,info)
+	clog("connection_info_handler:",o,scope,info)
 		glob_u.data.group_name = o.data.group_name
 		glob_u.data.channel_name = o.data.channel_name
 		clog("jsyncdb connected","room name:",glob_u.data.group_name)
 	} else if (o.data.sto_event_type=="user_disconnected"){
+	clog("user_disconnected_handler:",o,scope,info)
+
 	var last_conn =1
 	var k,v
 	var ws_conn_data = jc(msto.ws_channels[o.data.channel_name])
 	delete msto.ws_channels[o.data.channel_name]
 		for ([k,v] of Object.entries(msto.ws_channels)){
+		clog("ERR!",{channel_name:jc(o.data.channel_name),ws_channels:jc(msto.ws_channels),z:{o,data:o.data}})
+		clog("ERR?",k,v,ws_conn_data)
+		clog("ERR??",jc(msto.ws_channels))
+		clog("ERR???",jc(o.data))
 		if (v.id == ws_conn_data.id){
 			last_conn = 0
 		}
@@ -1603,9 +1682,8 @@ glob_u.fns.get_session_sto_id = get_session_sto_id
 // console.log("??...")
 
 
-// clog("???")
+// clog("?????")
 // 
-
 
 
 

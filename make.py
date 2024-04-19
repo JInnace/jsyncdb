@@ -91,7 +91,7 @@ def is_template_file(file_name):
 		p("\t\\t\tFILE ERR:::",file_name)
 		p("")
 
-	p("LRN",len(ftxt))
+	# p("LRN",len(ftxt))
 	return r
 
 
@@ -134,8 +134,8 @@ def parse(ftxt):
 	os.chdir(tglob["OUT_DIR"])
 
 	# dbg_out
-	wfile("mgen1.js",out)
-	wfile("mgen2.js",out2)
+	# wfile("mgen1.js",out)
+	# wfile("mgen2.js",out2)
 	p()
 	if mdict["output_ok"]:
 		p(mdict["outfile"]["_path"])
@@ -222,11 +222,18 @@ def dev_main():
 
 
 	o = {}
+	p("checking files...")
 	# for en in os.scandir(r"C:\ws\repos\script_utils\makestache"):
 	for en in os.scandir():
 		if isfile(en):
 			o[en] = is_template_file(en)
-			p([en],isfile(en))
+			# p([en],isfile(en))
+			# p(en.name,en.path)
+			if (o[en]["is_template"]):
+				p(":",en.path,"TEMPLATE")
+			else:
+				p(en.path)
+			# p(en.path,"is_template:",bool(o[en]["is_template"]))
 			r'''
 			for en2 in dir(en):
 				if en2[:2]=="__":
@@ -251,9 +258,17 @@ tglob["OUT_DIR"] = r"C:\ws\repos\script_utils\makestache\test_out"
 tglob["IN_DIR"] = r"C:\ws\repos\script_utils\makestache\test_src"
 tglob["OUT_DIR"] = r"C:\ws\repos\script_utils\makestache\test_src"
 
+tglob["IN_DIR"]  = os.path.abspath(r"./js_client")
+tglob["OUT_DIR"] = os.path.abspath(r"./js_client")
 
 
-
+orig_dir = os.getcwd()
 
 
 dev_main()
+os.chdir(orig_dir)
+
+# this should exist only on the authors computer (it copies make.py to here so i can run make.py twice and get any file changes)
+if os.path.isfile("udep.bat"):
+	os.system("udep.bat")
+
