@@ -1,0 +1,106 @@
+code {
+background: #eee;
+  font-size: 1.05em;
+    white-space: pre-wrap;
+}
+ul{
+    white-space: normal;
+
+}
+
+
+  .code_container{
+    white-space: pre-wrap;
+  }
+
+  a{
+    margin-left: .7em;
+
+  }
+  #root_div{
+    margin-top: 1.5em;
+    margin-left: 1em;
+    display: inline-block;
+  background: #eef;
+  padding: .2em;
+  min-width: 10em;
+
+  }
+  #oops_i_lied{
+    margin-top: .7em;
+    margin-left: 1.5em;
+  }
+  body {
+  font-family:Verdana,sans-serif;
+  }
+  #templates{
+    display: none;
+  }
+
+  .db_desc {
+    display: inline-block;
+    padding-left: 1em;
+    
+    /*padding: 5em;*/
+    /*padding-left: 1em;*/
+    /*margin: 5em;*/
+  }
+
+.hidden-boundary {
+  position: absolute;
+}
+
+      .unselectable {
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        color: #cc0000;
+        position: absolute;
+      }
+
+.jd_state {
+  background: #fff;
+  font-size: 1.0em;
+}
+
+
+.db_disp{
+  font-weight: bold;
+  background-color: #fff;
+  /*background-color: #fefefe;*/
+  /*background-color: #fdfdfd;*/
+}
+
+
+
+
+.wperm {
+  color: #900;
+  color: #008;
+  color: #FF8000;
+}
+
+
+.wperm2 {
+  color: #0a4;
+}
+
+
+.hide_demo .color_legend{
+  display: none;
+  
+}
+.hide_demo .db_disp{
+  display: none;
+
+}
+.hide_demo .demo_hide_btn{
+  display: none;
+
+}
+
+.show_demo .demo_show_btn{
+  display: none;
+}

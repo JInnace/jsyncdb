@@ -1,0 +1,124 @@
+<html itemscope itemtype="http://schema.org/Product" prefix="og: http://ogp.me/ns#" xmlns="http://www.w3.org/1999/html">
+  <head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+
+<style type="text/css">
+  h4{
+        margin-block-end: .5em;
+  }
+  .w_pre{
+
+    white-space: pre;
+  }
+  .code_container{
+    white-space: pre;
+  }
+  code{
+    white-space: pre;
+  }
+  a{
+    margin-left: .7em;
+
+  }
+  #root_div{
+    margin-top: 2em;
+    margin-left: 1em;
+  }
+  body {
+	font-size: larger;
+  }
+  #templates{
+  	display: none;
+  }
+
+
+</style>
+<script type="text/javascript">
+
+  function generate_name(){
+
+    var room_name = "room_" +Math.floor(Math.random() * 1000)
+    document.querySelector(".room_name").value = room_name
+    update_links()
+  
+  }
+  function update_links(){
+    console.log(">>>>>")
+    // document.querySelector(".user_1")
+    var domain_prefix
+    // var domain_name =  location.host.split(".").slice(-2).join(".") +"/ign/indx/jsyncdb"
+    var domain_name =  location.host.split(".").slice(-2).join(".") 
+    // +"/ign/indx/jsyncdb"
+    var room_name = "Room_1"
+    var room_name = document.querySelector(".room_name").value
+    // document.querySelector(".user_1").innerHTML = `${domain_prefix}<a href="https://${domain_prefix}.${domain_name}/${room_name}">user_1.jsyncdb.com/${room_name}</a>`
+    domain_prefix ="user_1"
+    document.querySelector("."+domain_prefix).innerHTML = `${domain_prefix}: <a href="https://${domain_prefix}.${domain_name}/${room_name}">${domain_prefix}.jsyncdb.com/${room_name}</a>`
+    domain_prefix ="user_2"
+    document.querySelector("."+domain_prefix).innerHTML = `${domain_prefix}: <a href="https://${domain_prefix}.${domain_name}/${room_name}">${domain_prefix}.jsyncdb.com/${room_name}</a>`
+    domain_prefix ="user_3"
+    document.querySelector("."+domain_prefix).innerHTML = `${domain_prefix}: <a href="https://${domain_prefix}.${domain_name}/${room_name}">${domain_prefix}.jsyncdb.com/${room_name}</a>`
+  }
+
+
+</script>
+</head>
+<body>
+<div id="templates">
+  
+<div class="ws_sto_lnk user_1a">
+user_1<a href="https://${domain_prefix}.${domain_name}/${room_name}">user_1.jsyncdb.com/${room_name}</a>
+</div>
+<div class="ws_sto_lnk user_2a">
+user_2<a href="https://${domain_prefix}.${domain_name}/${room_name}">user_1.jsyncdb.com/${room_name}</a>
+</div>
+<div class="ws_sto_lnk user_3a">
+user_3<a href="https://${domain_prefix}.${domain_name}/${room_name}">user_1.jsyncdb.com/${room_name}</a>
+</div>
+
+
+</div>
+
+<div id="root_div">
+
+<div class="">
+  <!-- Generate  -->
+<h4>
+  Jsyncdb
+</h4>
+
+<a href="https://jsyncdb.com/sto_demo"><h4>jsync main demo here</h4></a>
+
+git repos for the client and server will be added soon
+<div class="w_pre">
+Enter a room name <input type="text" class="room_name" oninput="update_links()"><button onclick="generate_name()">generate name</button>
+
+</div>
+the pages below will connect to the same database instance<br>
+to begin open two of devtools in two of these pages 
+<br>
+this demo assumes you are on a <b>desktop browser</b>
+<br>
+
+</div>
+<br>
+
+<div class="ws_sto_lnk user_1">
+user_1: <a href="">enter a room name first</a>
+</div>
+<div class="ws_sto_lnk user_2">
+user_2: <a href="">enter a room name first</a>
+</div>
+<div class="ws_sto_lnk user_3">
+user_3: <a href="">enter a room name first</a>
+<!-- user_3<a href="">enter a room name first</a> -->
+</div>
+
+
+
+
+</body>
+
+
+</html>

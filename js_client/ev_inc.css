@@ -1,0 +1,24 @@
+
+textarea{
+  display: inline;
+  width: 70%;
+
+
+}
+.evl_cnt {
+  position: relative;
+}
+
+.evl_btn3 {
+  margin-top: 1em;
+  /*margin-bottom: 1em;*/
+}
+
+
+.btn_cnt {
+  position: absolute;
+  top: 0px;
+  display: inline-block;
+  background: #eee;
+  width: 5em;
+}
