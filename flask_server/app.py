@@ -35,18 +35,19 @@ p=print
 @app.route('/')
 def index():
 	print("::::::::::::::;")
-	# return render_template('jsyncdb_index_v5.html')
+	return render_template('jsyncdb_index_v5.html')
 	return render_template('index.html')
 
 # r'''
 @app.route('/shared_libs/<path:path>')
 def send_report2(path):
-	return flask.send_file('templates/jquery-3.5.1.min.js')
+	return flask.send_file('../js_client/jquery-3.5.1.min.js')
 
 @app.route('/<path:path>')
 def send_report(path):
-	return flask.send_from_directory('templates', path)
-	# return flask.send_from_directory('./', path)
+	# return flask.send_from_directory('templates', path)
+	return flask.send_from_directory(r"../js_client", path)
+	return flask.send_from_directory('./', path)
 # '''
 
 
