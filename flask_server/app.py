@@ -60,6 +60,15 @@ def echo(sock):
 		sock.send(data)
 
 
+@sock.route('/echo_all')
+def echo_all(sock):
+	gmod.gx.add_to_channel(sock,"echo_all")
+	# send_to_channel("echo_all",msg,"sender")
+	while True:
+		data = sock.receive()
+		# ws.send(data)
+		gmod.gx.send_to_channel("echo_all",data,"sender")
+
 
 # @sock.route('/echo_c1')
 # def echo_coll(sock):

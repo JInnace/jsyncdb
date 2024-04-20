@@ -65,7 +65,6 @@ def send_to_channel(name,message,sender):
 
 
 
-
 def add_to_channel(sock,name):
 	pass
 	gmod.glob["groups"].setdefault(name,set())

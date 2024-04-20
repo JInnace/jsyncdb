@@ -38,7 +38,17 @@ window.glob_u.ws.fns.onclose = function onclose(event){
 	clog("WS_CLOSE",{that:this,readyState:this.readyState,args:[...arguments]})
 	// glob_u.ws.sockets.ws1.params.ord.run_cbs("WS_CLOSE:",{event,that:this})
 	glob_u.ws.sockets[this.params.socket_name].params.ord.run_cbs("WS_CLOSE:",{event,that:this})
-	setTimeout(this.params.fns.reconnect,1000)
+	// setTimeout(this.params.fns.reconnect,1000)
+	let  timeout0 = this.params.timeout0 || 100
+	let timeout_multi = this.params.timeout_multi || 3000
+	let t =timeout_multi
+	// let now = Date.now()
+	if (this.params.HAS_OPENED && timeout_multi<Date.now()-this.params.OPEN_TIME){
+		t=timeout0
+	}
+	// clog(":TIME:",now,this.params.OPEN_TIME,now-this.params.OPEN_TIME)
+	this.params.HAS_OPENED = 0
+	setTimeout(this.params.fns.reconnect,t)
 }
 
 window.glob_u.ws.fns.onmessage = function onmessage(event){
@@ -55,7 +65,9 @@ window.glob_u.ws.fns.onerror = function onerror(event){
 
 }
 window.glob_u.ws.fns.onopen = function onopen(event){
-
+	this.params.HAS_OPENED = 1
+	this.params.OPEN_TIME = Date.now()
+	
 	// clog("WS_OPEN???",{that:this,args:[...arguments]},{on_open_once:this.on_open_once,on_open_cbs:this.params.on_open_cbs})
 	// glob_u.ws.sockets.ws1.params.ord.run_cbs("WS_OPEN:",{event,that:this})
 	glob_u.ws.sockets[this.params.socket_name].params.ord.run_cbs("WS_OPEN:",{event,that:this})
@@ -224,6 +236,35 @@ function ws_reload(){
 
 
 function get_room_name(){
+	// return 
+	var s=location.search
+	// if s[0]=="?"){}
+	s[0]=="?" ?  s = s.slice(1):0
+	var param
+	for (param of s.split("&")){
+
+		let kv = param.split("=")
+		if (kv[0]=="room"){
+			return kv[1]
+		}
+		clog("::",param,kv)
+		// clog("::",param,kv,"")
+	}
+
+	// var 
+	return "room_name"
+	var room_name=location.pathname.match(/\/loc.([^\/]*)\//)
+	if (room_name){
+		room_name = room_name[1]
+	} else {
+	room_name = location.pathname.split("/").pop()
+
+	}
+	return room_name
+
+}
+// function get_room_name(){
+function get_room_name_old(){
 
 	var room_name=location.pathname.match(/\/loc.([^\/]*)\//)
 	if (room_name){
