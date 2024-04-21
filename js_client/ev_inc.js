@@ -13,6 +13,9 @@ function eval_txtarea(){
 
 	// r.exe = exe
     try {
+      exe = exe.replace(/[“”]/g,'"')
+      exe = exe.replace(/[’‘]/g,"'")
+
       // eval($(".eval_txt")[0].value)
       r.result = eval(exe)
       r.status = 0
