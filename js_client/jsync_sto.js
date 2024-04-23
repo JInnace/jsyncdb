@@ -14,7 +14,7 @@ function mhndlr_rld_2(_o,scope,info){
 		switch (parsed.sto_event_type){
 			case "set_msg":
 			// if (!glob_u.prom.init_db_resolve.resolved){
-			if (!glob_u.prom.init_db_resolve.resolved_inited){
+			if (!glob_u.prom.init_db_resolve.resolved_inited && _o?.event?.target?.pre_init_msgs){
 				_o.event.target.pre_init_msgs.push(_o)
 			}
 				pf._set_recv(o.path,o.key,o.val)
@@ -217,6 +217,7 @@ Proxy_Factory = class Proxy_Factory {
 	}
 
 	_set_recv(path,prop,val,id){
+		console.trace("_set_recv",{path,prop,val,id})
 
 		var p = path
 		var nprop = deep_prop_v0(this.root,p)

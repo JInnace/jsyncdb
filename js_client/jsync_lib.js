@@ -545,6 +545,7 @@ function create_ws_ord(){
 window.glob_u.ws.fns.dispatch = function dispatch(o,obj_x,info){
 	var event = o.event
 	// socket = o.that
+	// clog("jtx dispatch",{o,obj_x,info,that:this})
 	var data = JSON.parse(event.data)
 	// clog("WS_dispatch",data,socket.params.ord,data["CLIENT_KEY"])
 	// clog("trc:sto:ws_rec",data.CLIENT_KEY,data.sto_event_type,data)
@@ -687,6 +688,7 @@ glob_u.cb.ws.reg_cb(window.glob_u.ws.fns.dispatch,"WS_MESSAGE:","WS_MESSAGE")
 var Proxy_Permissions,Proxy_Factory
 
 function mhndlr_rld_2(_o,scope,info){
+	// clog("jtx mhndlr_rld_2",{_o,scope,info,that:this})
 	var dlog =nop
 	try {
 		var parsed = _o.data
@@ -699,7 +701,8 @@ function mhndlr_rld_2(_o,scope,info){
 		switch (parsed.sto_event_type){
 			case "set_msg":
 			// if (!glob_u.prom.init_db_resolve.resolved){
-			if (!glob_u.prom.init_db_resolve.resolved_inited){
+			// if (!glob_u.prom.init_db_resolve.resolved_inited){
+			if (!glob_u.prom.init_db_resolve.resolved_inited && _o?.event?.target?.pre_init_msgs){
 				_o.event.target.pre_init_msgs.push(_o)
 			}
 				pf._set_recv(o.path,o.key,o.val)
@@ -1228,6 +1231,7 @@ var DBL_Proxy = {
 
 function init_db(objx){
 	// clog("init_db~")
+	console.trace("init_db")
 	trc_sto("init_db",{})
 	glob_u.prom.init_db_resolve.resolved=1
 	var glob_mx = glob_u.data
@@ -1321,7 +1325,7 @@ window.msto=new Proxy(msto_prx, DBL_Proxy)
 
 
 function handle_pre_init_msgs(){
-	// clog("handle_pre_init_msgs")
+	clog("handle_pre_init_msgs")
 	var k,v,i
 	var _o
 	glob_u.prom.init_db_resolve.resolved_inited = 1

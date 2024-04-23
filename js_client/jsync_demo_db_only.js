@@ -13,7 +13,9 @@ function jsyncdb_init_helper(){
 	var room_name=glob_u.fns.get_room_name()
 
 	let ws_protocol = "wss:"
+	var port = location.port || "5000"
 	location.protocol == "https:" ?  "was already set to wss:" : ws_protocol = "ws:"
+
 
 	var o = {
 
@@ -28,6 +30,8 @@ function jsyncdb_init_helper(){
 		
 		url:'wss://' + window.location.hostname  +`/djc_srv/ws/chat/${room_name}`,
 		url: `${ws_protocol}//${location.hostname}:5000/echo_c1${location.search}`,
+		url: `${ws_protocol}//${location.hostname}:${port}/echo_c1${location.search}`,
+
 		socket_name:"ws1",
 		ord:glob_u.cb.ws,
 

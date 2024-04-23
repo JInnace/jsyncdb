@@ -143,7 +143,8 @@ var DBL_Proxy = {
 
 
 function init_db(objx){
-	// clog("init_db~")
+	clog("init_db~",arguments,this)
+	console.trace("init_db")
 	trc_sto("init_db",{})
 	glob_u.prom.init_db_resolve.resolved=1
 	var glob_mx = glob_u.data
@@ -241,7 +242,8 @@ function handle_pre_init_msgs(){
 	var k,v,i
 	var _o
 	glob_u.prom.init_db_resolve.resolved_inited = 1
-	for (v of glob_u.ws.sockets.ws1.pre_init_msgs){
+	// TODOL FIX HARDCODEING
+	for (v of glob_u.ws.sockets.ws1?.pre_init_msgs || []){
 		if (v.data.sto_event_type == "set_msg"){
 			msto.my_data.rehandle=1
 			_o={...v,data:jc(v.data)}
@@ -265,6 +267,7 @@ function init_mu(){
 	var k,v
 
 	var rr = {}
+	console.trace("init_mu")
 	var prom1 = new Promise(pfnf(rr));
 	prom1.then(init_db).then(ws_sto_connected)
 	glob_u.prom.init_db_resolve_timeout_arg = {aaa:"timedout",pl:msto_z}
