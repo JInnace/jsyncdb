@@ -545,7 +545,6 @@ function create_ws_ord(){
 window.glob_u.ws.fns.dispatch = function dispatch(o,obj_x,info){
 	var event = o.event
 	// socket = o.that
-	// clog("jtx dispatch",{o,obj_x,info,that:this})
 	var data = JSON.parse(event.data)
 	// clog("WS_dispatch",data,socket.params.ord,data["CLIENT_KEY"])
 	// clog("trc:sto:ws_rec",data.CLIENT_KEY,data.sto_event_type,data)
@@ -688,7 +687,6 @@ glob_u.cb.ws.reg_cb(window.glob_u.ws.fns.dispatch,"WS_MESSAGE:","WS_MESSAGE")
 var Proxy_Permissions,Proxy_Factory
 
 function mhndlr_rld_2(_o,scope,info){
-	// clog("jtx mhndlr_rld_2",{_o,scope,info,that:this})
 	var dlog =nop
 	try {
 		var parsed = _o.data
@@ -701,7 +699,6 @@ function mhndlr_rld_2(_o,scope,info){
 		switch (parsed.sto_event_type){
 			case "set_msg":
 			// if (!glob_u.prom.init_db_resolve.resolved){
-			// if (!glob_u.prom.init_db_resolve.resolved_inited){
 			if (!glob_u.prom.init_db_resolve.resolved_inited && _o?.event?.target?.pre_init_msgs){
 				_o.event.target.pre_init_msgs.push(_o)
 			}
@@ -905,6 +902,7 @@ Proxy_Factory = class Proxy_Factory {
 	}
 
 	_set_recv(path,prop,val,id){
+		console.trace("_set_recv",{path,prop,val,id})
 
 		var p = path
 		var nprop = deep_prop_v0(this.root,p)
@@ -1230,7 +1228,7 @@ var DBL_Proxy = {
 
 
 function init_db(objx){
-	// clog("init_db~")
+	clog("init_db~",arguments,this)
 	console.trace("init_db")
 	trc_sto("init_db",{})
 	glob_u.prom.init_db_resolve.resolved=1
@@ -1325,11 +1323,12 @@ window.msto=new Proxy(msto_prx, DBL_Proxy)
 
 
 function handle_pre_init_msgs(){
-	clog("handle_pre_init_msgs")
+	// clog("handle_pre_init_msgs")
 	var k,v,i
 	var _o
 	glob_u.prom.init_db_resolve.resolved_inited = 1
-	for (v of glob_u.ws.sockets.ws1.pre_init_msgs){
+	// TODOL FIX HARDCODEING
+	for (v of glob_u.ws.sockets.ws1?.pre_init_msgs || []){
 		if (v.data.sto_event_type == "set_msg"){
 			msto.my_data.rehandle=1
 			_o={...v,data:jc(v.data)}
@@ -1353,6 +1352,7 @@ function init_mu(){
 	var k,v
 
 	var rr = {}
+	console.trace("init_mu")
 	var prom1 = new Promise(pfnf(rr));
 	prom1.then(init_db).then(ws_sto_connected)
 	glob_u.prom.init_db_resolve_timeout_arg = {aaa:"timedout",pl:msto_z}
