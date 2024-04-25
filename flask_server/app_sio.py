@@ -126,7 +126,7 @@ def handle_message(data):
     p("io2+",room)
 
     # flask_socketio.emit('jsync.io', data, broadcast=True)
-    flask_socketio.emit('jsync.io2', data,room=room, broadcast=True)
+    flask_socketio.emit('jsync.io2', data ,room=room, broadcast=True)
 
 
 
